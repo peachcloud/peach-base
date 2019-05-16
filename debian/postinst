@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# saner programming env: these switches turn some bugs into errors
+set -o errexit -o pipefail -o noclobber -o nounset
+
+add_user() {
+  : "${1:?'User was not defined'}"
+  declare -r user="$1"
+  declare -r uid="$2"
+
+  if [ -z "$uid" ]; then
+    declare -r uid_flags=""
+  else
+    declare -r uid_flags="--uid $uid"
+  fi
+
+  declare -r group="${3:-$user}"
+  declare -r descr="${4:-No description}"
+  declare -r shell="${5:-/bin/false}"
+
+  if ! getent passwd | grep -q "^$user:"; then
+    echo "Creating system user: $user in $group with $descr and shell $shell"
+    useradd $uid_flags --gid $group --no-create-home --system --shell $shell -c "$descr" $user
+  fi
+}
+
+add_group() {
+  : "${1:?'Group was not defined'}"
+  declare -r group="$1"
+  declare -r gid="$2"
+
+  if [ -z "$gid" ]; then
+    declare -r gid_flags=""
+  else
+    declare -r gid_flags="--gid $gid"
+  fi
+
+  if ! getent group | grep -q "^$group:" ; then
+    echo "Creating system group: $group"
+    groupadd $gid_flags --system $group
+  fi
+}
+
+# use made-up user and group id 825
+# peach unicode == 0x1F351 == 127825
+
+PKG_USER=peach
+PKG_UID=825
+PKG_GROUP=peach
+PKG_GID=825
+PKG_CONFIG=/etc/peach
+PKG_STATE=/var/lib/peach
+
+add_group "${PKG_GROUP}" "${PKG_GID}"
+add_user "${PKG_USER}" "${PKG_UID}" "${PKG_GROUP}" "PeachCloud user daemon" '/bin/false'
+
+mkdir -p "${PKG_CONFIG}"
+chown -R peach:peach "${PKG_CONFIG}"
+mkdir -p "${PKG_STATE}"
+chown -R peach:peach "${PKG_STATE}"
+
+#DEBHELPER#
