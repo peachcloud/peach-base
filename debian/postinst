@@ -53,6 +53,8 @@ PKG_STATE=/var/lib/peach
 
 add_group "${PKG_GROUP}" "${PKG_GID}"
 add_user "${PKG_USER}" "${PKG_UID}" "${PKG_GROUP}" "PeachCloud user daemon" '/bin/false'
+# add peach user to sudo group
+usermod -a -G sudo "${PKG_USER}"
 
 mkdir -p "${PKG_CONFIG}"
 chown -R peach:peach "${PKG_CONFIG}"

@@ -11,5 +11,6 @@ Architecture: any
 Depends:
   ${misc:Depends}
   , ${shlibs:Depends}
-  , adduser
+  , passwd
+  , sudo
 Description: Base setup for PeachCloud packages
