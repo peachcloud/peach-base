@@ -3,5 +3,8 @@
 Base setup for PeachCloud packages
 
 - setup `peach` user & group
-- setup `/etc/peach` config directory
-- setup `/var/lib/peach` state directory
+  - add `peach` to `sudo` group
+- setup `~/.config` config directory
+- setup `~/.local/share` data directory
+- setup `~/.local/state` log directory
+- setup `~/.cache` data directory

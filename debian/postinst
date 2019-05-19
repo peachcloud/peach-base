@@ -20,7 +20,7 @@ add_user() {
 
   if ! getent passwd | grep -q "^$user:"; then
     echo "Creating system user: $user in $group with $descr and shell $shell"
-    useradd $uid_flags --gid $group --no-create-home --system --shell $shell -c "$descr" $user
+    useradd $uid_flags --gid $group --system --shell $shell -c "$descr" $user
   fi
 }
 
@@ -48,11 +48,15 @@ PKG_USER=peach
 PKG_UID=825
 PKG_GROUP=peach
 PKG_GID=825
-PKG_CONFIG=/etc/peach
-PKG_STATE=/var/lib/peach
+PKG_HOME=/home/peach
+PKG_CONFIG=${PKG_HOME}/.config
+PKG_STATE=${PKG_HOME}/.local/share
+PKG_CACHE=${PKG_HOME}/.cache
+PKG_LOG=${PKG_HOME}/.local/state
 
 add_group "${PKG_GROUP}" "${PKG_GID}"
-add_user "${PKG_USER}" "${PKG_UID}" "${PKG_GROUP}" "PeachCloud user daemon" '/bin/false'
+add_user "${PKG_USER}" "${PKG_UID}" "${PKG_GROUP}" "PeachCloud system user" '/bin/false'
+
 # add peach user to sudo group
 usermod -a -G sudo "${PKG_USER}"
 
@@ -60,5 +64,9 @@ mkdir -p "${PKG_CONFIG}"
 chown -R peach:peach "${PKG_CONFIG}"
 mkdir -p "${PKG_STATE}"
 chown -R peach:peach "${PKG_STATE}"
+mkdir -p "${PKG_CACHE}"
+chown -R peach:peach "${PKG_CACHE}"
+mkdir -p "${PKG_LOG}"
+chown -R peach:peach "${PKG_LOG}"
 
 #DEBHELPER#

@@ -33,8 +33,7 @@ delete_group() {
 
 PKG_USER=peach
 PKG_GROUP=peach
-PKG_CONFIG=/etc/peach
-PKG_STATE=/var/lib/peach
+PKG_HOME=/home/peach
 
 case "$1" in
   upgrade|remove|failed-upgrade|abort-upgrade|abort-install|disappear)
@@ -42,12 +41,10 @@ case "$1" in
   purge)
     delete_user "${PKG_USER}"
     delete_group "${PKG_GROUP}"
-
-    rm -rf "${PKG_CONFIG}"
-    rm -rf "${PKG_STATE}"
+    rm -rf ${PKG_HOME}
     ;;
   *)
-    echo "postinst called with unknown argument '$1'"
+    echo "postrm called with unknown argument '$1'"
     ;;
 esac
 
