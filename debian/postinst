@@ -61,12 +61,10 @@ add_user "${PKG_USER}" "${PKG_UID}" "${PKG_GROUP}" "PeachCloud system user" '/bi
 usermod -a -G sudo "${PKG_USER}"
 
 mkdir -p "${PKG_CONFIG}"
-chown -R peach:peach "${PKG_CONFIG}"
 mkdir -p "${PKG_STATE}"
-chown -R peach:peach "${PKG_STATE}"
 mkdir -p "${PKG_CACHE}"
-chown -R peach:peach "${PKG_CACHE}"
 mkdir -p "${PKG_LOG}"
-chown -R peach:peach "${PKG_LOG}"
+
+chown -R peach:peach "${PKG_HOME}"
 
 #DEBHELPER#
