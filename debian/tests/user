@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# saner programming env: these switches turn some bugs into errors
+set -o errexit -o pipefail -o noclobber
+
+# assert peach user exists
+id -u peach
+
+# assert peach group exists
+id -g peach
+
+PEACH_HOME="/home/peach"
+
+# assert peach home directory exists
+# (and peach-y sub-directories)
+test -d "${PEACH_HOME}"
+test -d "${PEACH_HOME}/.cache"
+test -d "${PEACH_HOME}/.config"
+test -d "${PEACH_HOME}/.local/share"
+test -d "${PEACH_HOME}/.local/state"
+
+# test peach user is in sudo group
+id -Gn peach | grep '\bsudo\b'
+
+# assert all files in peach home are owned by peach
+find "/home/peach" ! -user peach -exec false '{}' '+'
